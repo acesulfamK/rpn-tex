@@ -64,7 +64,7 @@
 #define YYPULL 1
 
 /* "%code top" blocks.  */
-#line 1 "plus-string.y"
+#line 1 "rpn-tex.y"
 
   #include <assert.h>
   #include <ctype.h>  /* isdigit. */
@@ -75,7 +75,7 @@
   int yylex (void);
   void yyerror (char const *);
 
-#line 79 "plus-string.c"
+#line 79 "rpn-tex.tab.c"
 
 
 
@@ -119,7 +119,9 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    STRING = 258                   /* "string"  */
+    STRING = 258,                  /* "string"  */
+    FRAC = 259,                    /* FRAC  */
+    INT = 260                      /* INT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -131,7 +133,7 @@ union YYSTYPE
   char* STRING;                            /* "string"  */
   char* expr;                              /* expr  */
 
-#line 135 "plus-string.c"
+#line 137 "rpn-tex.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -155,12 +157,17 @@ enum yysymbol_kind_t
   YYSYMBOL_YYerror = 1,                    /* error  */
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
   YYSYMBOL_STRING = 3,                     /* "string"  */
-  YYSYMBOL_4_n_ = 4,                       /* '\n'  */
-  YYSYMBOL_5_ = 5,                         /* '+'  */
-  YYSYMBOL_YYACCEPT = 6,                   /* $accept  */
-  YYSYMBOL_input = 7,                      /* input  */
-  YYSYMBOL_line = 8,                       /* line  */
-  YYSYMBOL_expr = 9                        /* expr  */
+  YYSYMBOL_FRAC = 4,                       /* FRAC  */
+  YYSYMBOL_INT = 5,                        /* INT  */
+  YYSYMBOL_6_n_ = 6,                       /* '\n'  */
+  YYSYMBOL_7_ = 7,                         /* '^'  */
+  YYSYMBOL_8___ = 8,                       /* '_'  */
+  YYSYMBOL_9_ = 9,                         /* '&'  */
+  YYSYMBOL_10_ = 10,                       /* ')'  */
+  YYSYMBOL_YYACCEPT = 11,                  /* $accept  */
+  YYSYMBOL_input = 12,                     /* input  */
+  YYSYMBOL_line = 13,                      /* line  */
+  YYSYMBOL_expr = 14                       /* expr  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -488,19 +495,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   7
+#define YYLAST   19
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  6
+#define YYNTOKENS  11
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  7
+#define YYNRULES  13
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  12
+#define YYNSTATES  17
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   258
+#define YYMAXUTOK   260
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -515,18 +522,15 @@ union yyalloc
 static const yytype_int8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       4,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       6,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     5,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     9,     2,
+       2,    10,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     7,     8,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -539,14 +543,19 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     1,     2,     3
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
+       5
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    32,    32,    33,    37,    38,    39,    43
+       0,    34,    34,    35,    39,    40,    41,    44,    46,    60,
+      73,    86,    96,   106
 };
 #endif
 
@@ -563,14 +572,14 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 {
   static const char *const yy_sname[] =
   {
-  "end of file", "error", "invalid token", "string", "'\\n'", "'+'",
-  "$accept", "input", "line", "expr", YY_NULLPTR
+  "end of file", "error", "invalid token", "string", "FRAC", "INT",
+  "'\\n'", "'^'", "'_'", "'&'", "')'", "$accept", "input", "line", "expr", YY_NULLPTR
   };
   return yy_sname[yysymbol];
 }
 #endif
 
-#define YYPACT_NINF (-3)
+#define YYPACT_NINF (-4)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -584,8 +593,8 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,     0,    -3,    -2,     1,    -3,    -3,     3,    -3,     2,
-      -3,    -3
+      -4,    13,    -4,     3,    -4,    -4,    -4,    -4,     5,    -4,
+      -4,    -4,    -3,    -4,    -4,    -4,    -4
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -593,20 +602,20 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       2,     0,     1,     0,     0,     4,     3,     0,     6,     0,
-       5,     7
+       2,     0,     1,     0,     7,    13,     4,     3,     0,     6,
+       5,    12,     0,     8,     9,    10,    11
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -3,    -3,    -3,    -3
+      -4,    -4,    -4,     2
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     1,     6,     7
+       0,     1,     7,    12
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -614,32 +623,36 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       2,     3,     8,     4,     5,    11,     9,    10
+       4,    13,     5,     8,    14,    15,    16,    11,     4,     9,
+       5,    10,     0,     2,     3,    11,     4,     0,     5,     6
 };
 
 static const yytype_int8 yycheck[] =
 {
-       0,     1,     4,     3,     4,     3,     5,     4
+       3,     4,     5,     1,     7,     8,     9,    10,     3,     6,
+       5,     6,    -1,     0,     1,    10,     3,    -1,     5,     6
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     7,     0,     1,     3,     4,     8,     9,     4,     5,
-       4,     3
+       0,    12,     0,     1,     3,     5,     6,    13,    14,     6,
+       6,    10,    14,     4,     7,     8,     9
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     6,     7,     7,     8,     8,     8,     9
+       0,    11,    12,    12,    13,    13,    13,    14,    14,    14,
+      14,    14,    14,    14
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     0,     2,     1,     2,     2,     3
+       0,     2,     0,     2,     1,     2,     2,     1,     3,     3,
+       3,     3,     2,     1
 };
 
 
@@ -723,15 +736,15 @@ yy_symbol_value_print (FILE *yyo,
   switch (yykind)
     {
     case YYSYMBOL_STRING: /* "string"  */
-#line 28 "plus-string.y"
+#line 30 "rpn-tex.y"
          { fprintf (yyo, "%s", ((*yyvaluep).STRING)); }
-#line 729 "plus-string.c"
+#line 742 "rpn-tex.tab.c"
         break;
 
     case YYSYMBOL_expr: /* expr  */
-#line 28 "plus-string.y"
+#line 30 "rpn-tex.y"
          { fprintf (yyo, "%s", ((*yyvaluep).expr)); }
-#line 735 "plus-string.c"
+#line 748 "rpn-tex.tab.c"
         break;
 
       default:
@@ -1340,32 +1353,104 @@ yyreduce:
   switch (yyn)
     {
   case 5: /* line: expr '\n'  */
-#line 38 "plus-string.y"
+#line 40 "rpn-tex.y"
              { printf ("%s\n", (yyvsp[-1].expr)); }
-#line 1346 "plus-string.c"
+#line 1359 "rpn-tex.tab.c"
     break;
 
   case 6: /* line: error '\n'  */
-#line 39 "plus-string.y"
+#line 41 "rpn-tex.y"
              { yyerrok; }
-#line 1352 "plus-string.c"
+#line 1365 "rpn-tex.tab.c"
     break;
 
-  case 7: /* expr: "string" '+' "string"  */
-#line 43 "plus-string.y"
-                        {
-  char * new_string = (char*)malloc(strlen((yyvsp[-2].STRING)) + strlen((yyvsp[0].STRING)) + 1);
-  strcpy(new_string, (yyvsp[-2].STRING));
-  strcat(new_string, (yyvsp[0].STRING));
+  case 8: /* expr: expr expr FRAC  */
+#line 47 "rpn-tex.y"
+  {
+  char * new_string = (char*)malloc(strlen((yyvsp[-2].expr)) + strlen((yyvsp[-1].expr)) + 10);
+  strcpy(new_string, "\\frac");
+  strcat(new_string, "{");
+  strcat(new_string, (yyvsp[-2].expr));
+  strcat(new_string, "}{");
+  strcat(new_string, (yyvsp[-1].expr));
+  strcat(new_string, "}");
   (yyval.expr) = new_string;
-  free((yyvsp[-2].STRING));
-  free((yyvsp[0].STRING));
+  free((yyvsp[-2].expr));
+  free((yyvsp[-1].expr));
   }
-#line 1365 "plus-string.c"
+#line 1382 "rpn-tex.tab.c"
+    break;
+
+  case 9: /* expr: expr expr '^'  */
+#line 61 "rpn-tex.y"
+  {
+  char * new_string = (char*)malloc(strlen((yyvsp[-2].expr)) + strlen((yyvsp[-1].expr)) + 4);
+  strcpy(new_string, (yyvsp[-2].expr));
+  strcat(new_string, "^");
+  strcat(new_string, "{");
+  strcat(new_string, (yyvsp[-1].expr));
+  strcat(new_string, "}");
+  (yyval.expr) = new_string;
+  free((yyvsp[-2].expr));
+  free((yyvsp[-1].expr));
+  }
+#line 1398 "rpn-tex.tab.c"
+    break;
+
+  case 10: /* expr: expr expr '_'  */
+#line 74 "rpn-tex.y"
+  {
+  char * new_string = (char*)malloc(strlen((yyvsp[-2].expr)) + strlen((yyvsp[-1].expr)) + 4);
+  strcpy(new_string, (yyvsp[-2].expr));
+  strcat(new_string, "_");
+  strcat(new_string, "{");
+  strcat(new_string, (yyvsp[-1].expr));
+  strcat(new_string, "}");
+  (yyval.expr) = new_string;
+  free((yyvsp[-2].expr));
+  free((yyvsp[-1].expr));
+  }
+#line 1414 "rpn-tex.tab.c"
+    break;
+
+  case 11: /* expr: expr expr '&'  */
+#line 87 "rpn-tex.y"
+  {
+  char * new_string = (char*)malloc(strlen((yyvsp[-2].expr)) + strlen((yyvsp[-1].expr)) + 1);
+  strcpy(new_string, (yyvsp[-2].expr));
+  strcat(new_string, (yyvsp[-1].expr));
+  (yyval.expr) = new_string;
+  free((yyvsp[-2].expr));
+  free((yyvsp[-1].expr));
+  }
+#line 1427 "rpn-tex.tab.c"
+    break;
+
+  case 12: /* expr: expr ')'  */
+#line 97 "rpn-tex.y"
+  {
+  char * new_string = (char*)malloc(strlen((yyvsp[-1].expr)) + 3);
+  strcpy(new_string, "(");
+  strcat(new_string, (yyvsp[-1].expr));
+  strcat(new_string, ")");
+  (yyval.expr) = new_string;
+  free((yyvsp[-1].expr));
+  }
+#line 1440 "rpn-tex.tab.c"
+    break;
+
+  case 13: /* expr: INT  */
+#line 107 "rpn-tex.y"
+  {
+    char * new_string = (char*)malloc(5);
+    strcpy(new_string,"\\int");
+    (yyval.expr) = new_string;
+  }
+#line 1450 "rpn-tex.tab.c"
     break;
 
 
-#line 1369 "plus-string.c"
+#line 1454 "rpn-tex.tab.c"
 
       default: break;
     }
@@ -1589,39 +1674,51 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 53 "plus-string.y"
+#line 114 "rpn-tex.y"
 
 
 int yylex() {
-    int c;
+  int c;
 
-    while ((c = getchar ()) == ' ' || c == '\t')
-      continue;
-    
-    if (c == EOF) {
-        return 0;
-    } else if (c == '+') {
-        return '+';
-    } else if (c == '\n') {
-        return '\n';
-    } else {
-        int counter = 0;
-        ungetc(c, stdin);
-        char* buffer = (char*)malloc(256);
-        int i = 0;
-        while ((c = getchar()) != EOF && c != '\n' && c != ' ' && c != '\t'){
-            buffer[i++] = c;
-            counter++;
-        }
-        
-        if(c == '\n'){
-          ungetc(c,stdin);
-        }
-        
-        buffer[i] = '\0';
-        yylval.STRING = buffer;
-        return STRING;
+  while ((c = getchar ()) == ' ' || c == '\t')
+    continue;
+  
+  if (c == EOF) {
+      return 0;
+  } else if (c == '+') {
+      return '+';
+  } else if (c == '\n') {
+      return '\n';
+  } else if (c == '@'){
+    switch(c = getchar()){
+      case 'f': return FRAC;
+      case 'i': return INT;
+      fprintf(stderr, "Error: A character after '@' is nonexpected.\n");
+      exit(1);
     }
+  } else {
+      switch(c){
+        case '_':
+        case '^':
+        case '&':
+        case ')':
+        return c;
+      }
+      ungetc(c, stdin);
+      char* buffer = (char*)malloc(256);
+      int i = 0;
+      while ((c = getchar()) != EOF && c != '\n' && c != ' ' && c != '\t'){
+          buffer[i++] = c;
+      }
+      // prevent double Enter push
+      if(c == '\n'){ 
+        ungetc(c,stdin);
+      }
+      
+      buffer[i] = '\0';
+      yylval.STRING = buffer;
+      return STRING;
+  }
 }
 
 /* Called by yyparse on error.  */
