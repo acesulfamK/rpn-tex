@@ -93,6 +93,17 @@ expr: "string"
   free($2);
   }
 
+  | expr expr '+'
+  {
+  char * new_string = (char*)malloc(strlen($1) + strlen($2) + 2);
+  strcpy(new_string, $1);
+  strcat(new_string, "+");
+  strcat(new_string, $2);
+  $$ = new_string;
+  free($1);
+  free($2);
+  }
+
   | expr ')'
   {
   char * new_string = (char*)malloc(strlen($1) + 3);
@@ -121,8 +132,6 @@ int yylex() {
   
   if (c == EOF) {
       return 0;
-  } else if (c == '+') {
-      return '+';
   } else if (c == '\n') {
       return '\n';
   } else if (c == '@'){
@@ -138,6 +147,7 @@ int yylex() {
         case '^':
         case '&':
         case ')':
+        case '+':
         return c;
       }
       ungetc(c, stdin);

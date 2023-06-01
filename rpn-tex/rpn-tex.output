@@ -14,8 +14,9 @@ Grammar
     8     | expr expr '^'
     9     | expr expr '_'
    10     | expr expr '&'
-   11     | expr ')'
-   12     | INT
+   11     | expr expr '+'
+   12     | expr ')'
+   13     | INT
 
 
 Terminals, with rules where they appear
@@ -23,28 +24,29 @@ Terminals, with rules where they appear
     $end (0) 0
     '\n' (10) 3 4 5
     '&' (38) 10
-    ')' (41) 11
+    ')' (41) 12
+    '+' (43) 11
     '^' (94) 8
     '_' (95) 9
     error (256) 5
     "string" <char*> (258) 6
     FRAC (259) 7
-    INT (260) 12
+    INT (260) 13
 
 
 Nonterminals, with rules where they appear
 
-    $accept (11)
+    $accept (12)
         on left: 0
-    input (12)
+    input (13)
         on left: 1 2
         on right: 0 2
-    line (13)
+    line (14)
         on left: 3 4 5
         on right: 2
-    expr <char*> (14)
-        on left: 6 7 8 9 10 11 12
-        on right: 4 7 8 9 10 11
+    expr <char*> (15)
+        on left: 6 7 8 9 10 11 12 13
+        on right: 4 7 8 9 10 11 12
 
 
 State 0
@@ -94,9 +96,9 @@ State 4
 
 State 5
 
-   12 expr: INT •
+   13 expr: INT •
 
-    $default  reduce using rule 12 (expr)
+    $default  reduce using rule 13 (expr)
 
 
 State 6
@@ -120,7 +122,8 @@ State 8
     8     | expr • expr '^'
     9     | expr • expr '_'
    10     | expr • expr '&'
-   11     | expr • ')'
+   11     | expr • expr '+'
+   12     | expr • ')'
 
     "string"  shift, and go to state 4
     INT       shift, and go to state 5
@@ -146,9 +149,9 @@ State 10
 
 State 11
 
-   11 expr: expr ')' •
+   12 expr: expr ')' •
 
-    $default  reduce using rule 11 (expr)
+    $default  reduce using rule 12 (expr)
 
 
 State 12
@@ -161,7 +164,9 @@ State 12
     9     | expr expr • '_'
    10     | expr • expr '&'
    10     | expr expr • '&'
-   11     | expr • ')'
+   11     | expr • expr '+'
+   11     | expr expr • '+'
+   12     | expr • ')'
 
     "string"  shift, and go to state 4
     FRAC      shift, and go to state 13
@@ -169,6 +174,7 @@ State 12
     '^'       shift, and go to state 14
     '_'       shift, and go to state 15
     '&'       shift, and go to state 16
+    '+'       shift, and go to state 17
     ')'       shift, and go to state 11
 
     expr  go to state 12
@@ -200,3 +206,10 @@ State 16
    10 expr: expr expr '&' •
 
     $default  reduce using rule 10 (expr)
+
+
+State 17
+
+   11 expr: expr expr '+' •
+
+    $default  reduce using rule 11 (expr)
